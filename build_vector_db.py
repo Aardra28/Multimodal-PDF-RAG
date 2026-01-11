@@ -9,6 +9,10 @@ from typing import List, Tuple
 import base64
 from huggingface_hub import InferenceClient
 from langchain_core.documents import Document
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def load_pdf_documents(folder_path):
@@ -123,8 +127,14 @@ def generate_image_summary(all_results):
         list: List of Document objects with summaries and metadata
     """
     
-    # Initialize Hugging Face client
-    client = InferenceClient(api_key="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")
+    # Get API key from environment variable
+    api_key = os.getenv("HUGGINGFACE_API_KEY")
+    
+    if not api_key:
+        raise ValueError("HUGGINGFACE_API_KEY not found in environment variables. Please check your .env file.")
+    
+    # Initialize Hugging Face client with API key from environment
+    client = InferenceClient(api_key=api_key)
     
     documents = []
     
